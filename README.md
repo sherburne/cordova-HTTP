@@ -1,3 +1,7 @@
+
+ _TFS: I've modified this plugin to support application/json data on POST requests._
+
+
 cordovaHTTP
 ==================
 
