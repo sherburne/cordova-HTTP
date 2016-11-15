@@ -20,7 +20,7 @@
 }
 
 - (void)setRequestHeaders:(NSDictionary*)headers forManager:(AFHTTPSessionManager*)manager {
-    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
+//    manager.requestSerializer = [AFHTTPRequestSerializer serializer];
     [headers enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         [manager.requestSerializer setValue:obj forHTTPHeaderField:key];
     }];
@@ -66,14 +66,25 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
-- (void)post:(CDVInvokedUrlCommand*)command {
+- (void)postForm:(CDVInvokedUrlCommand*)command {
     AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager setRequestSerializer:[AFHTTPRequestSerializer serializer]];
+    [self post:command forManager:manager];
+}
+
+- (void)postJson:(CDVInvokedUrlCommand*)command {
+    AFHTTPSessionManager *manager = [AFHTTPSessionManager manager];
+    [manager setRequestSerializer:[AFJSONRequestSerializer serializer]];
+    [self post:command forManager:manager];
+}
+
+- (void)post:(CDVInvokedUrlCommand*)command forManager:(AFHTTPSessionManager *)manager {
     manager.securityPolicy = securityPolicy;
     NSString *url = [command.arguments objectAtIndex:0];
     NSDictionary *parameters = [command.arguments objectAtIndex:1];
     NSDictionary *headers = [command.arguments objectAtIndex:2];
     [self setRequestHeaders: headers forManager: manager];
-   
+
     CordovaHttpPlugin* __weak weakSelf = self;
     manager.responseSerializer = [TextResponseSerializer serializer];
     [manager POST:url parameters:parameters progress:nil success:^(NSURLSessionTask *task, id responseObject) {
