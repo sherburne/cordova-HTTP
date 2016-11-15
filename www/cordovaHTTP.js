@@ -156,8 +156,11 @@ if (typeof angular !== "undefined") {
             validateDomainName: function(validate) {
                 return makePromise(http.validateDomainName, [validate]);
             },
-            post: function(url, params, headers) {
-                return makePromise(http.post, [url, params, headers], true);
+            postForm: function(url, params, headers) {
+                return makePromise(http.postForm, [url, params, headers], true);
+            },
+            postJson: function(url, params, headers) {
+                return makePromise(http.postJson, [url, params, headers], true);
             },
             get: function(url, params, headers) {
                 return makePromise(http.get, [url, params, headers], true);
